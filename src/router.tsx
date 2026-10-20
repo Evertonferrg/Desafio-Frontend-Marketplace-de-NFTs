@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-router'
 import { CatalogPage } from '@/features/catalog/CatalogPage'
 import { CatalogSearchSchema } from '@/features/catalog/search'
+import { NftDetailPage } from '@/features/nft/NftDetailPage'
 
 function RootLayout() {
   return (
@@ -42,19 +43,6 @@ function NotFound() {
   )
 }
 
-function NftPlaceholder() {
-  const { id } = nftRoute.useParams()
-  return (
-    <div>
-      <Link to="/" className="underline">
-        ← Voltar
-      </Link>
-      <h1 className="mt-4 text-2xl font-bold">NFT {id}</h1>
-      <p className="mt-2 text-muted-foreground">Tela de detalhe: próximo passo.</p>
-    </div>
-  )
-}
-
 const rootRoute = createRootRoute({ component: RootLayout, notFoundComponent: NotFound })
 
 const indexRoute = createRoute({
@@ -67,7 +55,7 @@ const indexRoute = createRoute({
 const nftRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/nft/$id',
-  component: NftPlaceholder,
+  component: NftDetailPage,
 })
 
 const routeTree = rootRoute.addChildren([indexRoute, nftRoute])

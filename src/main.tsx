@@ -3,8 +3,19 @@ import { createRoot } from 'react-dom/client'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from '@tanstack/react-router'
 import './index.css'
+import { sessionStore } from '@/features/auth/session'
+import { configureHttp } from '@/lib/http'
 import { queryClient } from '@/lib/queryClient'
 import { router } from './router'
+
+
+configureHttp({
+  getToken: () => sessionStore.getToken(),
+  onUnauthenticated: () => {
+    sessionStore.clear()
+    queryClient.clear()
+  },
+})
 
 async function bootstrap() {
   if (import.meta.env.VITE_ENABLE_MOCKS === 'true') {

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useNfts } from './hooks'
 import { PAGE_SIZE, type CatalogSearch } from './search'
 import { Filters } from './components/Filters'
-import { NftCard } from './components/NftCards'
+import { NftCard } from './components/NftCard'
 import { NftCardSkeleton } from './components/NftCardSkeleton'
 import { Pagination } from './components/Pagination'
 
