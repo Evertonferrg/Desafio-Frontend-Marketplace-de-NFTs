@@ -1,3 +1,4 @@
+import { Link, useLocation } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useSession } from '@/features/auth/session'
 import { useFavorites, useToggleFavorite } from '../hooks'
@@ -6,9 +7,17 @@ export function FavoriteButton({ nftId }: { nftId: string }) {
   const session = useSession()
   const favorites = useFavorites()
   const toggle = useToggleFavorite()
+  const href = useLocation({ select: (l) => l.href })
 
   if (!session) {
-    return <p className="text-sm text-muted-foreground">Entre na sua conta para favoritar.</p>
+    return (
+      <p className="text-sm text-muted-foreground">
+        <Link to="/login" search={{ redirect: href }} className="underline">
+          Entre na sua conta
+        </Link>{' '}
+        para favoritar.
+      </p>
+    )
   }
 
   const isFavorite = favorites.data?.includes(nftId) ?? false

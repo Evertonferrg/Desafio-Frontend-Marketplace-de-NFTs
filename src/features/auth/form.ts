@@ -1,22 +1,28 @@
 import type { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 import { ApiError } from '@/contracts'
 
-// aplica fieldErrors do servidor nos campos e devolve a mensagem geral do formulário
-// (string vazia quando o erro já foi mostrado nos campos)
+/**
+ * Leva os erros por campo vindos da API para o formulário.
+ * Devolve uma mensagem geral quando o erro não pertence a nenhum campo.
+ */
 export function applyApiError<T extends FieldValues>(
   error: unknown,
   setError: UseFormSetError<T>,
   fields: readonly Path<T>[],
-): string {
-  if (!(error instanceof ApiError)) return 'Erro inesperado'
-
-  let applied = false
-  for (const field of fields) {
-    const message = error.fieldErrors?.[field]
-    if (message) {
-      setError(field, { type: 'server', message })
-      applied = true
+): string | null {
+  if (error instanceof ApiError && error.fieldErrors) {
+    let applied = false
+    for (const field of fields) {
+      const message = error.fieldErrors[field as string]
+      if (message) {
+        setError(field, { type: 'server', message })
+        applied = true
+      }
     }
+    if (applied) return null
   }
-  return applied ? '' : error.message
+  if (error instanceof ApiError && error.code === 'NETWORK') {
+    return 'Sem conexão. Verifique sua internet e tente de novo.'
+  }
+  return 'Não foi possível concluir. Tente novamente em instantes.'
 }

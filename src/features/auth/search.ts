@@ -1,14 +1,11 @@
 import { z } from 'zod'
 
-// aceita só caminhos internos, para evitar open redirect (//evil.com, https://...)
-export function safeRedirect(value: unknown, fallback = '/'): string {
-  if (typeof value !== 'string') return fallback
-  if (!value.startsWith('/') || value.startsWith('//') || value.includes('\\')) return fallback
-  return value
-}
-
-// valores inválidos na url não quebram a página
-export const AuthSearchSchema = z.object({
+// ?redirect= guarda para onde voltar depois do login
+export const RedirectSearchSchema = z.object({
   redirect: z.string().optional().catch(undefined),
 })
-export type AuthSearch = z.infer<typeof AuthSearchSchema>
+
+/** Só aceita caminhos internos (evita redirecionar para outro site). */
+export function safeRedirect(value?: string): string {
+  return value && value.startsWith('/') && !value.startsWith('//') ? value : '/'
+}

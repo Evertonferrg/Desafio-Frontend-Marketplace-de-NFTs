@@ -10,3 +10,7 @@ export async function signup(input: SignupInput) {
   const { data } = await http.post('/auth/signup', input)
   return AuthResponseSchema.parse(data)
 }
+
+export async function logout() {
+  await http.post('/auth/logout')
+}

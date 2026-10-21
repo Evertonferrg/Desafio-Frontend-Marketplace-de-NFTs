@@ -1,26 +1,25 @@
 import type { ReactNode } from 'react'
 
 export const inputClass =
-  'w-full rounded-md border border-input bg-background px-3 py-2 text-sm ' +
-  'placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 ' +
-  'focus-visible:ring-ring aria-[invalid=true]:border-destructive'
+  'h-10 w-full rounded-lg border bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-destructive'
 
-type FieldProps = {
-  id: string
-  label: string
-  error?: string
-  children: ReactNode
-}
+type Props = { id: string; label: string; error?: string; hint?: string; children: ReactNode }
 
-export function Field({ id, label, error, children }: FieldProps) {
+/** Rótulo + campo + dica/erro. O input vem como children e referencia `${id}-error` / `${id}-hint`. */
+export function Field({ id, label, error, hint, children }: Props) {
   return (
     <div className="space-y-1.5">
       <label htmlFor={id} className="text-sm font-medium">
         {label}
       </label>
       {children}
+      {hint && !error && (
+        <p id={`${id}-hint`} className="text-xs text-muted-foreground">
+          {hint}
+        </p>
+      )}
       {error && (
-        <p id={`${id}-error`} role="alert" className="text-sm text-destructive">
+        <p id={`${id}-error`} role="alert" className="text-xs text-destructive">
           {error}
         </p>
       )}
