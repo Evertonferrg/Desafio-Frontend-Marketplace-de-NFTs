@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useMediaQuery } from '@/lib/useMediaQuery'
+import { PaymentMobile } from './PaymentMobile'
 import { useNavigate } from '@tanstack/react-router'
 import { OrderConfirmationDialog } from './OrderConfirmationDialog'
 import { OrderSummary } from './OrderSummary'
@@ -21,7 +23,7 @@ function Field({ id, label, required = true, children }: { id: string; label: st
 
 const wallets = ['WalletConnect', 'MetaMask', 'Coinbase Wallet']
 
-export function PaymentPage() {
+function PaymentDesktop() {
   const navigate = useNavigate()
   const { items, fee, total } = useCart()
   const [wallet, setWallet] = useState('Coinbase Wallet')
@@ -128,4 +130,9 @@ export function PaymentPage() {
       {done && <OrderConfirmationDialog {...done} wallet={wallet} onClose={close} />}
     </form>
   )
+}
+
+export function PaymentPage() {
+  const isDesktop = useMediaQuery('(min-width: 768px)')
+  return isDesktop ? <PaymentDesktop /> : <PaymentMobile />
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useFocusedFlow } from './useFocusedFlow'
 
 const benefits = [
   { letter: 'W', title: 'Segurança da carteira', text: 'Proteja sua carteira e colecione arte digital verificada com confiança.' },
@@ -43,8 +44,9 @@ function Newsletter() {
 }
 
 export function Footer() {
+  const focused = useFocusedFlow()
   return (
-    <footer className="mx-auto mb-20 mt-16 max-w-[1200px] px-4 md:mb-0 md:px-6">
+    <footer className={`mx-auto mt-16 max-w-[1200px] px-4 md:mb-0 md:block md:px-6 ${focused ? 'hidden' : 'mb-20'}`}>
       <section className="grid gap-8 bg-card p-6 md:grid-cols-4 md:p-8">
         {benefits.map((b) => (
           <div key={b.title} className="md:border-r md:border-brand/60 md:pr-6">

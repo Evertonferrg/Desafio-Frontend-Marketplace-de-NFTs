@@ -10,8 +10,8 @@ export function OrderSummary({ withPromo = false, children }: { withPromo?: bool
     <div>
       {withPromo && (
         <div className="mb-4">
-          <label htmlFor="promo" className="text-sm font-bold">Código promocional</label>
-          <div className="mt-2 flex border border-brand">
+          <label htmlFor="promo" className="sr-only text-sm font-bold md:not-sr-only">Código promocional</label>
+          <div className="flex overflow-hidden rounded-full border border-brand md:mt-2 md:rounded-none">
             <input
               id="promo"
               value={code}

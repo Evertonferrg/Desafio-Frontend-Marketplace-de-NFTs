@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Heart, Home, ShoppingCart, User } from 'lucide-react'
 import { useCart } from '@/features/cart/cartStore'
+import { useFocusedFlow } from './useFocusedFlow'
 
 const item =
   'relative grid place-items-center rounded-md p-3 text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring data-[status=active]:text-brand'
@@ -8,6 +9,8 @@ const item =
 // Só aparece no mobile; no desktop o menu fica no Header.
 export function BottomNav() {
   const { count } = useCart()
+  const focused = useFocusedFlow()
+  if (focused) return null
 
   return (
     <nav

@@ -36,6 +36,24 @@ export const cartStore = {
     items = items.filter((i) => i.id !== id)
     emit()
   },
+  add(nft: { id: string; name: string; price: string | number; image: string }, qty = 1, edition = '1/50') {
+    const found = items.find((i) => i.id === nft.id)
+    items = found
+      ? items.map((i) => (i.id === nft.id ? { ...i, qty: i.qty + qty } : i))
+      : [
+          ...items,
+          {
+            id: nft.id,
+            name: nft.name,
+            tokenId: `#${nft.id.replace(/\D/g, '')}`,
+            edition,
+            price: Number(nft.price),
+            qty,
+            image: nft.image,
+          },
+        ]
+    emit()
+  },
   clear() {
     items = []
     emit()
@@ -44,7 +62,7 @@ export const cartStore = {
 
 export function useCart() {
   const list = useSyncExternalStore(cartStore.subscribe, cartStore.get)
-  const count = list.reduce((n, i) => n + i.qty, 0)
+  const count = list.length
   const subtotal = list.reduce((n, i) => n + i.price * i.qty, 0)
   const fee = list.length ? NETWORK_FEE : 0
   return { items: list, count, subtotal, fee, total: subtotal + fee }
