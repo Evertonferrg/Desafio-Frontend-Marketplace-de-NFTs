@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useNfts } from './hooks'
 import { PAGE_SIZE, type CatalogSearch } from './search'
 import { Filters } from './components/Filters'
+import { Hero } from './components/Hero'
 import { NftCard } from './components/NftCard'
 import { NftCardSkeleton } from './components/NftCardSkeleton'
 import { Pagination } from './components/Pagination'
@@ -40,65 +41,69 @@ export function CatalogPage() {
   }, [data, params.page, update])
 
   return (
-    <section aria-labelledby="catalog-title" className="space-y-6">
-      <h1 id="catalog-title" className="text-2xl font-bold">
-        Explorar NFTs
-      </h1>
+    <>
+      <Hero />
 
-      <Filters q={search.q} category={search.category} sort={params.sort} onChange={update} />
+      <section id="catalogo" aria-labelledby="catalog-title" className="scroll-mt-20 space-y-6">
+        <h2 id="catalog-title" className="sr-only">
+          Catálogo de NFTs
+        </h2>
 
-      {/* anuncia o resultado para leitores de tela */}
-      <p className="sr-only" role="status" aria-live="polite">
-        {data ? `${data.total} resultados` : 'Carregando'}
-      </p>
+        <Filters q={search.q} category={search.category} sort={params.sort} onChange={update} />
 
-      {isPending ? (
-        <Grid busy>
-          {Array.from({ length: PAGE_SIZE }, (_, i) => (
-            <NftCardSkeleton key={i} />
-          ))}
-        </Grid>
-      ) : isError ? (
-        <div role="alert" className="rounded-xl border p-8 text-center">
-          <p className="font-medium">
-            {error instanceof ApiError && error.code === 'NETWORK'
-              ? 'Sem conexão. Verifique sua internet.'
-              : 'Não foi possível carregar os NFTs.'}
-          </p>
-          <Button className="mt-4" onClick={() => void refetch()}>
-            Tentar novamente
-          </Button>
-        </div>
-      ) : data.items.length === 0 ? (
-        <div className="rounded-xl border p-8 text-center">
-          <p className="font-medium">Nenhum NFT encontrado</p>
-          <p className="mt-1 text-sm text-muted-foreground">Ajuste a busca ou os filtros.</p>
-          <Button
-            variant="outline"
-            className="mt-4"
-            onClick={() => update({ q: undefined, category: undefined, sort: undefined, page: undefined })}
-          >
-            Limpar filtros
-          </Button>
-        </div>
-      ) : (
-        <>
-          <p className="text-sm text-muted-foreground" aria-hidden="true">
-            {data.total} {data.total === 1 ? 'resultado' : 'resultados'}
-          </p>
-          <Grid busy={isPlaceholderData}>
-            {data.items.map((nft) => (
-              <NftCard key={nft.id} nft={nft} />
+        {/* anuncia o resultado para leitores de tela */}
+        <p className="sr-only" role="status" aria-live="polite">
+          {data ? `${data.total} resultados` : 'Carregando'}
+        </p>
+
+        {isPending ? (
+          <Grid busy>
+            {Array.from({ length: PAGE_SIZE }, (_, i) => (
+              <NftCardSkeleton key={i} />
             ))}
           </Grid>
-          <Pagination
-            page={data.page}
-            totalPages={data.totalPages}
-            onPage={(page) => update({ page: page === 1 ? undefined : page })}
-          />
-        </>
-      )}
-    </section>
+        ) : isError ? (
+          <div role="alert" className="rounded-xl border p-8 text-center">
+            <p className="font-medium">
+              {error instanceof ApiError && error.code === 'NETWORK'
+                ? 'Sem conexão. Verifique sua internet.'
+                : 'Não foi possível carregar os NFTs.'}
+            </p>
+            <Button className="mt-4" onClick={() => void refetch()}>
+              Tentar novamente
+            </Button>
+          </div>
+        ) : data.items.length === 0 ? (
+          <div className="rounded-xl border p-8 text-center">
+            <p className="font-medium">Nenhum NFT encontrado</p>
+            <p className="mt-1 text-sm text-muted-foreground">Ajuste a busca ou os filtros.</p>
+            <Button
+              variant="outline"
+              className="mt-4"
+              onClick={() => update({ q: undefined, category: undefined, sort: undefined, page: undefined })}
+            >
+              Limpar filtros
+            </Button>
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-muted-foreground" aria-hidden="true">
+              {data.total} {data.total === 1 ? 'resultado' : 'resultados'}
+            </p>
+            <Grid busy={isPlaceholderData}>
+              {data.items.map((nft) => (
+                <NftCard key={nft.id} nft={nft} />
+              ))}
+            </Grid>
+            <Pagination
+              page={data.page}
+              totalPages={data.totalPages}
+              onPage={(page) => update({ page: page === 1 ? undefined : page })}
+            />
+          </>
+        )}
+      </section>
+    </>
   )
 }
 
